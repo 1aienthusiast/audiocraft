@@ -363,8 +363,7 @@ class LMModel(StreamingModule):
         logits = logits.permute(0, 1, 3, 2)  # [B, K, card, T]
         logits = logits[..., -1]  # [B x K x card]
 
-        # Apply softmax for sampling if temp > 0. Else, do greedy sampling to avoid zero division error.
-        if use_sampling and temp > 0.0:
+        if use_sampling:
             probs = torch.softmax(logits / temp, dim=-1)
             if top_p > 0.0:
                 next_token = utils.sample_top_p(probs, p=top_p)
