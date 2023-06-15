@@ -23,6 +23,7 @@ from ..modules.conditioners import ConditioningAttributes, WavCondition
 from ..utils.autocast import TorchAutocast
 
 
+
 MelodyList = tp.List[tp.Optional[torch.Tensor]]
 MelodyType = tp.Union[torch.Tensor, MelodyList]
 
@@ -65,29 +66,30 @@ class MusicGen:
         return self.compression_model.channels
 
     @staticmethod
-    def get_pretrained(name: str = 'melody', device='cuda'):
+    def get_pretrained(directory:str = '',name: str = 'melody', device='cuda'):
         """Return pretrained model, we provide four models:
         - small (300M), text to music, # see: https://huggingface.co/facebook/musicgen-small
         - medium (1.5B), text to music, # see: https://huggingface.co/facebook/musicgen-medium
         - melody (1.5B) text to music and text+melody to music, # see: https://huggingface.co/facebook/musicgen-melody
         - large (3.3B), text to music, # see: https://huggingface.co/facebook/musicgen-large
         """
-
+        zsdfzsdzsdfzd = directory
+        if zsdfzsdzsdfzd == '': zsdfzsdzsdfzd=name
         if name == 'debug':
             # used only for unit tests
             compression_model = get_debug_compression_model(device)
             lm = get_debug_lm_model(device)
             return MusicGen(name, compression_model, lm)
-
-        if name not in HF_MODEL_CHECKPOINTS_MAP:
-            raise ValueError(
-                f"{name} is not a valid checkpoint name. "
-                f"Choose one of {', '.join(HF_MODEL_CHECKPOINTS_MAP.keys())}"
-            )
+        if directory != '':
+            if not os.path.isfile(zsdfzsdzsdfzd) and not os.path.isdir(directory):
+                raise ValueError(
+                    f"{directory} is not a valid checkpoint directory. "
+                    f"Choose one of {', '.join(HF_MODEL_CHECKPOINTS_MAP.keys())}"
+                )
 
         cache_dir = os.environ.get('MUSICGEN_ROOT', None)
-        compression_model = load_compression_model(name, device=device, cache_dir=cache_dir)
-        lm = load_lm_model(name, device=device, cache_dir=cache_dir)
+        compression_model = load_compression_model(zsdfzsdzsdfzd, device=device, cache_dir=cache_dir)
+        lm = load_lm_model(zsdfzsdzsdfzd, device=device, cache_dir=cache_dir)
         if name == 'melody':
             lm.condition_provider.conditioners['self_wav'].match_len_on_eval = True
 
