@@ -66,7 +66,7 @@ class MusicGen:
         return self.compression_model.channels
 
     @staticmethod
-    def get_pretrained(directory:str = '',name: str = 'melody', device='cuda'):
+    def get_pretrained(name: str = 'melody', device='cuda',directory:str = ''):
         """Return pretrained model, we provide four models:
         - small (300M), text to music, # see: https://huggingface.co/facebook/musicgen-small
         - medium (1.5B), text to music, # see: https://huggingface.co/facebook/musicgen-medium
