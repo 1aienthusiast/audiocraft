@@ -82,7 +82,6 @@ class MusicGen:
             else:
                 device = 'cpu'
 
-
         zsdfzsdzsdfzd = directory
         if zsdfzsdzsdfzd == '': zsdfzsdzsdfzd=name
         if name == 'debug':
@@ -140,7 +139,6 @@ class MusicGen:
     def set_custom_progress_callback(self, progress_callback: tp.Optional[tp.Callable[[int, int], None]] = None):
         """Override the default progress callback."""
         self._progress_callback = progress_callback
-
 
     def generate_unconditional(self, num_samples: int, progress: bool = False) -> torch.Tensor:
         """Generate samples in an unconditional manner.
@@ -298,12 +296,13 @@ class MusicGen:
                 print(f'{generated_tokens: 6d} / {total_gen_len: 6d}', end='\r')
 
         if prompt_tokens is not None:
-            assert self.generation_params['max_gen_len'] > prompt_tokens.shape[-1], \
+            assert max_prompt_len >= prompt_tokens.shape[-1], \
                 "Prompt is longer than audio to generate"
 
         callback = None
         if progress:
             callback = _progress_callback
+        
         if self.duration <= self.max_duration:
             # generate by sampling from LM, simple case.
             with self.autocast:
